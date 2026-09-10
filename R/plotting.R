@@ -63,6 +63,13 @@ epi_plot <- function(dados, titulo, subtitulo = NULL, nota = NULL,
   sign_plot(p, nota)
 }
 
+# Ajusta o dispositivo gráfico do IRkernel para que a figura exibida no notebook
+# tenha a mesma proporção do PNG gravado.
+tamanho_figura <- function(largura = VISUAL$largura_pol, altura = VISUAL$altura_pol) {
+  options(repr.plot.width = largura, repr.plot.height = altura, repr.plot.res = 140)
+  invisible(NULL)
+}
+
 save_figure <- function(p, arquivo,
                         largura = VISUAL$largura_pol,
                         altura = VISUAL$altura_pol) {
