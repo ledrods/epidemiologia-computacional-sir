@@ -1,0 +1,2 @@
+"cenario","beta","gamma","R0","periodo_infeccioso","dia_pico","dia_pico_refinado","S_pico","I_pico","R_pico","I_pico_refinado","prevalencia_pico","infectados_total","taxa_ataque","taxa_ataque_teorica","prevalencia_pico_teorica","S_pico_teorico"
+"Linha de base",0.485714285714286,0.142857142857143,3.4,7,44,44.35,463374.768150237,514377.47721689,511167.754632874,515088.655277158,0.345470191290929,1432382.22452231,0.962027660668342,0.962027518947267,0.345948402464084,437917.647058824
