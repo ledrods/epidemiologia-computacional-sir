@@ -1,6 +1,6 @@
 # Modelo SIR para uma epidemia de chikungunya no Recife
 
-Atividade do Módulo I da disciplina Elementos de Epidemiologia Computacional, PPGBAS UFPE e BSI UFRPE.
+Atividade do Módulo I da disciplina Elementos de Epidemiologia Computacional, BSI UFRPE.
 Simulação do modelo SIR clássico aplicado à introdução do vírus chikungunya no município do Recife,
 implementada em R com `deSolve`, seguindo a estrutura dos cadernos do curso de modelagem de doenças
 infecciosas.
@@ -27,8 +27,6 @@ de ataque prevista com a soroprevalência de 11,8 por cento medida em inquérito
 Rscript scripts/setup.R            # instala deSolve, reshape2, ggplot2, scales e patchwork
 Rscript scripts/render_figures.R   # gera figures/ e results/, conferindo tudo contra a teoria
 bash scripts/build_paper.sh        # compila paper/mini_paper.pdf
-
-python -m nbconvert --to html --embed-images notebooks/01_sir_chikungunya_recife.ipynb
 ```
 
 O `render_figures.R` valida cada resultado contra as expressões analíticas do modelo SIR, a prevalência
