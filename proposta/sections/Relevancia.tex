@@ -1,0 +1,28 @@
+\section{Relevância}
+\label{sec:relevancia}
+
+A chikungunya continua circulando no Brasil em ondas recorrentes \cite{desouza2023}, e no Recife a maior
+parte da população ainda é suscetível \cite{braga2023}. Como a forma crônica da doença é frequente
+\cite{paixao2018}, cada nova onda deixa um número grande de pessoas com dor articular por meses. Saber
+quanta imunidade a cidade acumulou, em que ritmo a transmissão cresce e quando uma ação contra o mosquito
+ainda faz diferença é útil para a vigilância e para o planejamento do controle vetorial.
+
+Três argumentos justificam o projeto agora.
+
+\textbf{Maturidade técnica.} Pela primeira vez há, para o Recife, uma série pública de notificações de
+chikungunya por semana e por bairro, de 2015 a 2025 \cite{recife2026}, e um inquérito sorológico de base
+populacional \cite{braga2023}. A série permite ajustar a dinâmica do modelo, e o inquérito fixa quantas
+pessoas foram de fato infectadas, o que separa a transmissão da subnotificação. As ferramentas para
+integrar e ajustar modelos de equações diferenciais são abertas e maduras \cite{rcore2025, soetaert2010}.
+
+\textbf{Capacidade local.} Os resultados preliminares já incluem o tratamento reprodutível dos dados do
+portal, um modelo SIR conferido contra todas as suas expressões analíticas e o modelo SEIR-SEI
+implementado e verificado contra a teoria (Seção \ref{sec:preliminares}). O projeto começa com a base
+pronta.
+
+\textbf{Impacto esperado.} O modelo calibrado vai produzir estimativas da imunidade remanescente e cenários
+de controle vetorial para a cidade, em código aberto que pode ser atualizado com as notificações de cada
+ano. Sistemas como o InfoDengue já estimam a transmissão a partir das notificações \cite{codeco2018}. A
+contribuição deste projeto é complementar: um modelo mecanístico, com o mosquito e a imunidade acumulada
+representados de forma explícita, calibrado para o Recife e ancorado num inquérito sorológico local. Não
+encontramos, na revisão feita para esta proposta, um modelo com essas características para a cidade.

@@ -1,0 +1,34 @@
+\section{Apresentação}
+\label{sec:apresentacao}
+
+A chikungunya é uma doença causada por um vírus transmitido principalmente pelo mosquito \textit{Aedes
+aegypti}. Depois de uma incubação de alguns dias, provoca febre e dor articular intensa \cite{who2025}.
+Em parte dos pacientes a dor persiste: numa revisão sistemática, 43\% dos infectados não estavam
+recuperados três meses depois da infecção \cite{paixao2018}. Isso faz da doença um problema que dura muito
+além do surto, com impacto sobre o trabalho das pessoas e sobre os serviços de saúde.
+
+O vírus chegou ao Brasil em 2014. Entre 2013 e 2022 foram registrados 253.545 casos confirmados em
+laboratório, em sete ondas epidêmicas, com o Nordeste como região mais atingida \cite{desouza2023}. No
+Recife, as notificações do portal de dados abertos da Prefeitura \cite{recife2026} mostram duas grandes
+ondas. A primeira começou em agosto de 2015 e teve pico na semana de 14 de fevereiro de 2016, com 9.989
+casos prováveis em 2015 e 2016. A segunda, em 2021, foi ainda maior nas notificações, com 16.013 casos
+prováveis. Um inquérito domiciliar feito na cidade entre 2018 e 2019 encontrou anticorpos contra o vírus
+em 35,7\% da população \cite{braga2023}. Ou seja, cerca de dois terços dos moradores ainda podiam se
+infectar.
+
+A vigilância conta casos, mas os casos notificados são uma fração pequena das infecções. Comparando a
+sorologia com as notificações, há cerca de 53 infecções para cada caso provável notificado na primeira
+onda. Os casos também não dizem, sozinhos, quanta imunidade a cidade já acumulou nem quanto uma campanha
+contra o mosquito pode reduzir a próxima onda. Para responder a essas perguntas é preciso um modelo que
+represente o ciclo de transmissão.
+
+Este projeto parte de um trabalho anterior da disciplina, em que um modelo SIR clássico foi aplicado à
+introdução da chikungunya no Recife. O SIR foi revisado e conferido contra suas expressões analíticas, e
+suas distâncias em relação aos dados foram medidas: ele prevê que 96\% da população se infecte e põe o pico
+38 dias depois do primeiro caso, enquanto o inquérito mediu 36\% e a primeira onda levou cerca de seis meses
+até o pico. As causas dessas distâncias são conhecidas. O SIR não tem o mosquito, não tem o período de
+latência e supõe que toda a cidade se mistura de forma homogênea.
+
+A proposta é desenvolver um modelo SEIR-SEI, com latência nos humanos e o mosquito como população
+explícita, calibrá-lo com as notificações do Recife e com o inquérito sorológico, e usá-lo para monitorar
+a transmissão e avaliar cenários de controle vetorial.

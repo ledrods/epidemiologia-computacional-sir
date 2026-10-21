@@ -1,0 +1,96 @@
+%=======================================================================
+% Template para projeto de pesquisa/desenvolvimento
+% Bacharelado em Sistemas de Informação  Universidade Federal  Rural de Pernambuco
+%=======================================================================
+
+\documentclass[a4paper,12pt,oneside]{article}
+
+%% --- Codificação e idioma ---
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+
+%% --- Fontes ---
+\usepackage{lmodern}
+\usepackage{microtype}
+
+%% --- Geometria e espaçamento (padrão ABNT NBR 14724) ---
+\usepackage[a4paper,
+            top=3.0cm, bottom=2.0cm,
+            left=3.0cm, right=2.0cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+%espaçamento entre parágrafos
+\setlength{\parindent}{.0in}
+\parskip 10pt
+
+%% The amssymb package provides various useful mathematical symbols
+\usepackage{amssymb}
+%% The amsthm package provides extended theorem environments
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage[hidelinks]{hyperref}
+\newcommand{\D}{\displaystyle}
+\newcommand{\mc}{\multicolumn}
+\newcommand{\ft}{\footnotesize}
+\newcommand{\Sc}{\scriptsize}
+\newcommand{\rset}{\mathbb{R}}
+\newcommand{\zset}{\mathbb{Z}}
+\newcommand\SB[1]{{\color{cyan} #1}}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{xurl}
+\usepackage{appendix}
+\usepackage{booktabs}
+
+% O logotipo fica em figures/ e as figuras do estudo são geradas em ../figures/.
+\graphicspath{{figures/}{../figures/}}
+
+%% --- Bibliografia ABNT ---
+\usepackage[alf,abnt-emphasize=bf,bibjustif,abnt-etal-list=0]{abntex2cite}
+
+%% --- Cabeçalho/rodapé com filete UFRPE ---
+\usepackage{fancyhdr}
+\setlength{\headheight}{24.1pt}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small{Projeto de Pesquisa, UFRPE}}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{1.2pt}
+\renewcommand{\headrule}{\hbox to\headwidth{%
+  \leaders\hrule height \headrulewidth\hfill}}
+
+
+
+% inicio do documento
+\pagestyle {empty}
+\begin{document}
+\include{capa}
+\include{abstract}
+\pagestyle {fancy}
+\tableofcontents
+
+\setcounter{page}{0} \pagenumbering{arabic}
+\include{sections/Apresentacao}
+\include{sections/Relevancia}
+\include{sections/Objetivos}
+\include{sections/TrabalhosRelacionados}
+\include{sections/Metodologia}
+\include{sections/Cronograma}
+\include{sections/ResultadosEsperados}
+\include{sections/UsoIA}
+\newpage
+\renewcommand{\refname}{{Referências bibliográficas}}
+\bibliographystyle{abntex2-alf}
+\bibliography{referencias}
+
+
+% para incluir anexos
+\appendix
+\include{anexos}
+
+
+
+\end{document}

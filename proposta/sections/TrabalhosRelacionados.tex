@@ -1,0 +1,67 @@
+\section{Trabalhos Relacionados}
+\label{sec:trabalhos_relacionados}
+
+\subsection{Modelos compartimentais e doenças transmitidas por mosquitos}
+
+O modelo SIR de \citeonline{kermack1927} divide a população em suscetíveis, infectados e recuperados e
+mostra que um surto só acontece quando o número básico de reprodução, $R_0$, passa de 1. Para doenças
+transmitidas por mosquitos, a base teórica é a de Ross e Macdonald, que representa a transmissão como um
+ciclo entre humanos e mosquitos e mostra que ela é proporcional à densidade de mosquitos por pessoa e muito
+sensível à sobrevivência do mosquito adulto \cite{smith2012}. Essa teoria orienta até hoje o controle
+vetorial.
+
+\subsection{Modelos hospedeiro e vetor para a chikungunya}
+
+\citeonline{yakob2013} ajustaram um modelo determinístico com humanos e mosquitos à grande epidemia da ilha
+da Reunião, em 2006, e estimaram $R_0$ de 4,1. Mesmo simples, o modelo reproduziu o pico e o tamanho final
+da epidemia, e a análise de sensibilidade mostrou que a latência humana e o tempo de incubação no mosquito
+pesam muito no ajuste, o que justifica representá-los separadamente. \citeonline{manore2014} compararam
+dengue e chikungunya em \textit{Aedes aegypti} e \textit{Aedes albopictus} com modelos SEIR-SEI,
+reunindo os parâmetros da literatura para os dois vetores. O trabalho também deixa clara uma distinção
+que afeta a leitura de qualquer estimativa de $R_0$: o valor calculado pela matriz de próxima geração é a
+raiz quadrada do número de reprodução de humano para humano.
+
+Os parâmetros biológicos têm fontes próprias. A revisão de \citeonline{rudolph2014} estima a incubação da
+chikungunya em humanos em cerca de 3 dias. \citeonline{christofferson2014} mostram que a incubação no
+mosquito tem média próxima de 8 dias para a linhagem ECSA e que usar o tempo mais curto em que o vírus
+aparece na saliva superestima a velocidade da epidemia. A revisão de \citeonline{haider2020} reúne
+estimativas de $R_0$ de surtos transmitidos por \textit{Aedes}, com média de 3,4, mas não traz nenhuma
+estimativa para o Brasil.
+
+\subsection{A chikungunya no Brasil e no Recife}
+
+A disseminação do vírus pelas Américas a partir de 2013 é descrita por \citeonline{weaver2015}. A
+linhagem ECSA entrou no Brasil por Feira de Santana, na Bahia, em 2014 \cite{faria2016}, e o país teve
+sete ondas epidêmicas até 2022, com recorrência em vários estados \cite{desouza2023}. Na Região
+Metropolitana do Recife, um estudo com pacientes febris de uma unidade de pronto atendimento em Paulista
+detectou o vírus em junho de 2015 e mostrou a chikungunya substituindo a zika a partir de agosto daquele
+ano \cite{magalhaes2017}.
+
+Os inquéritos sorológicos mostram que a fração infectada varia muito entre lugares. Depois das primeiras
+epidemias, foram encontrados 57\% de soropositivos em setores de Feira de Santana \cite{dias2018}, 11,8\%
+numa comunidade de Salvador \cite{anjos2020} e 35,7\% no Recife, com 22,3\% no estrato socioeconômico alto e
+cerca de 39\% nos estratos intermediário e baixo \cite{braga2023}. Uma meta-análise estima 29\% em média
+nas Américas \cite{skalinski2023}. Essa variação é um argumento direto contra a hipótese de mistura
+homogênea.
+
+A hipótese de imunidade permanente, ao contrário, tem bom apoio. Anticorpos neutralizantes persistem por
+décadas \cite{nitatpattana2014}, protegem contra novas infecções \cite{srikiatkhachorn2016} e reagem com
+genótipos diferentes, o que confirma que o vírus tem um só sorotipo \cite{auerswald2018}. É uma diferença
+importante em relação à dengue, que tem quatro tipos de vírus \cite{cdc2026}.
+
+\subsection{Monitoramento e controle}
+
+O InfoDengue estima a transmissão de arboviroses em centenas de municípios brasileiros a partir das
+notificações, corrigindo o atraso de notificação e calculando o número de reprodução efetivo
+\cite{codeco2018}. É uma ferramenta estatística, que não representa o mosquito nem a imunidade acumulada.
+Sobre o controle, a revisão sistemática de \citeonline{bowman2016} encontrou poucos ensaios randomizados
+que mediram o efeito do controle vetorial sobre a incidência de dengue e concluiu que a evidência é fraca
+e pouco padronizada, embora o manejo ambiental comunitário com tampas nos reservatórios tenha mostrado
+efeito. Por isso a eficácia de uma campanha deve ser tratada como incerta e explorada em cenários.
+
+\subsection{O que esta proposta acrescenta}
+
+Os modelos hospedeiro e vetor da literatura foram ajustados a outros lugares, e as ferramentas de
+monitoramento usadas no Brasil não são mecanísticas. Esta proposta junta as duas coisas para o Recife: um
+modelo SEIR-SEI calibrado com a série local de notificações e com o inquérito sorológico da própria cidade,
+capaz de estimar a imunidade remanescente e de comparar estratégias de controle.

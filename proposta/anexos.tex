@@ -1,0 +1,42 @@
+\section{Anexo: respostas às anotações da etapa anterior}
+\label{sec:anotacoes}
+
+A versão anterior deste estudo, entregue como atividade do Módulo I, recebeu cinco anotações da
+professora. A Tabela \ref{tab:anotacoes} indica onde cada uma foi respondida nos resultados preliminares.
+
+\begin{table}[htb]
+\centering
+\caption{Anotações da avaliação do Módulo I e onde foram respondidas.}
+\label{tab:anotacoes}
+\small
+\begin{tabular}{p{5.2cm}p{9.6cm}}
+\toprule
+\textbf{Anotação} & \textbf{Resposta} \\
+\midrule
+``Onde está essa discussão?'', sobre o confronto entre a taxa de ataque e a soroprevalência &
+A discussão dos resultados preliminares compara o SIR com o inquérito do próprio Recife
+\cite{braga2023}, que substitui o de Salvador usado antes, e calcula o $R_0$ implícito. \\
+\addlinespace
+``E pode se reinfectar?'', sobre o intervalo entre duas infecções &
+O texto passou a explicar que o intervalo de geração se refere a duas pessoas diferentes na cadeia. A
+imunidade permanente é justificada com três estudos, e uma extensão com perda de imunidade mostra o que
+mudaria. \\
+\addlinespace
+``Onde está esse valor?'', sobre a taxa de ataque com seis casas decimais &
+A Tabela \ref{tab:validacao} mostra os valores simulado e analítico e o erro relativo. \\
+\addlinespace
+``Faltaram cenários com gamma maior do que beta!!'' &
+São dez cenários nos três regimes (Tabela \ref{tab:cenarios}), com figura própria para $\gamma \geq \beta$,
+o total de infectados até a extinção e o mapa de todas as combinações de $\beta$ e $\gamma$. \\
+\addlinespace
+``Onde está essa análise?'', sobre o controle vetorial de 60\% &
+A eficácia deixou de ser um valor fixo sem fonte. Foram variados a eficácia e o dia de início no SIR, e o
+controle de criadouros foi simulado no SEIR-SEI. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Além das anotações, a revisão das fontes corrigiu a autoria do $R_0$ de 3,4, que é de
+\citeonline{haider2020}, e a descrição do estudo de \citeonline{magalhaes2017}, feito numa unidade de saúde
+de Paulista, e passou a usar uma única fonte para o período infeccioso \cite{manore2014}. Por isso a taxa
+de recuperação mudou de 1/7 para 1/6 por dia, e o pico da linha de base passou do dia 44 para o dia 38.

@@ -1,39 +1,53 @@
-# Modelo SIR para uma epidemia de chikungunya no Recife
+# Chikungunya no Recife: do SIR ao modelo com vetor
 
-Atividade do Módulo I da disciplina Elementos de Epidemiologia Computacional, BSI UFRPE.
-Simulação do modelo SIR clássico aplicado à introdução do vírus chikungunya no município do Recife,
-implementada em R com `deSolve`, seguindo a estrutura dos cadernos do curso de modelagem de doenças
-infecciosas.
+Trabalho da disciplina Elementos de Epidemiologia Computacional, BSI UFRPE. Começou como a atividade do
+Módulo I, uma simulação do modelo SIR clássico para a introdução do vírus chikungunya no Recife, e virou
+a base de uma proposta de projeto de pesquisa com um modelo SEIR-SEI, que tem período de latência nos
+humanos e o mosquito *Aedes aegypti* como população explícita. Tudo é implementado em R com `deSolve`,
+seguindo a estrutura dos cadernos do curso.
 
 ## Resultados principais
 
-Com população de 1.488.920 habitantes, período infeccioso de 7 dias e R0 de 3,4:
+| Grandeza | SIR | SEIR-SEI |
+| --- | --- | --- |
+| Número de reprodução de humano para humano | 3,4 | 3,4 |
+| Crescimento inicial | 0,40 por dia | 0,053 por dia |
+| Dia do pico | 38 | 271 |
+| Infectados no pico | 515.090 | 115.189 |
+| Taxa de ataque final | 96,2 por cento | 94,9 por cento |
 
-| Grandeza | Valor |
-| --- | --- |
-| Dia do pico | 44 |
-| Infectados no pico | 514.377 pessoas, 34,5 por cento da população |
-| Suscetíveis no pico | 463.375 pessoas |
-| Recuperados no pico | 511.168 pessoas |
-| Taxa de ataque final | 96,2 por cento |
+Diante dos dados do Recife:
 
-Oito variações das taxas de contágio e de recuperação mostram que a razão entre elas determina o tamanho
-da epidemia, enquanto a escala determina apenas a sua velocidade. A discussão das lacunas confronta a taxa
-de ataque prevista com a soroprevalência de 11,8 por cento medida em inquérito de campo no Nordeste.
+- Os casos prováveis da primeira onda cresceram 0,021 por dia entre setembro de 2015 e janeiro de 2016,
+  com pico na semana de 14 de fevereiro de 2016. Para crescer nesse ritmo, o SIR precisaria de R0 = 1,12 e
+  o SEIR-SEI de 1,71.
+- O inquérito sorológico de 2018 e 2019 (Braga et al., 2023) encontrou 35,7 por cento da população com
+  anticorpos, o que corresponde a R0 = 1,24 sob mistura homogênea.
+- O SIR revisado cobre os três regimes de taxas (β > γ, β = γ, γ > β), confere cada resultado com a
+  teoria, mede a eficácia crítica do controle vetorial (70,6 por cento) e o efeito da data de início.
 
 ## Como reproduzir
 
 ```bash
-Rscript scripts/setup.R            # instala deSolve, reshape2, ggplot2, scales e patchwork
+Rscript scripts/setup.R            # instala deSolve, reshape2, ggplot2, scales, patchwork e jsonlite
+Rscript scripts/baixar_dados.R     # baixa as notificações do portal do Recife e gera data/processed/
 Rscript scripts/render_figures.R   # gera figures/ e results/, conferindo tudo contra a teoria
-bash scripts/build_paper.sh        # compila paper/mini_paper.pdf
+bash scripts/build_proposta.sh     # compila proposta/main.pdf
 ```
 
-O `render_figures.R` valida cada resultado contra as expressões analíticas do modelo SIR, a prevalência
-máxima, o número de suscetíveis no pico e o tamanho final do surto, e interrompe a execução se algum
-valor divergir mais de 1 por cento.
+O build da proposta usa `pdflatex` e `bibtex` do PATH. Se eles não estiverem no PATH, a variável `MIKTEX`
+pode apontar para a pasta `bin` da instalação, por exemplo `MIKTEX=/caminho/miktex/bin/x64 bash
+scripts/build_proposta.sh`.
 
-Para abrir o notebook é preciso o kernel R do Jupyter:
+`data/processed/` já vem no repositório, então `render_figures.R` roda sem baixar nada. Os arquivos
+brutos trazem endereço dos pacientes e ficam em `data/raw/`, fora do controle de versão.
+
+O `render_figures.R` confere a prevalência máxima, os suscetíveis no pico e o tamanho final do SIR, o total
+de infectados abaixo do limiar, a equivalência das extensões quando desligadas, a conservação das
+populações e a taxa de crescimento do SEIR-SEI contra o autovalor do Jacobiano. Ele interrompe a execução
+se algum valor divergir.
+
+Para abrir os notebooks é preciso o kernel R do Jupyter:
 
 ```r
 install.packages("IRkernel")
@@ -43,31 +57,38 @@ IRkernel::installspec()
 ## Estrutura
 
 ```
-R/                    modelo, integração, métricas, cenários e figuras
-scripts/              instalação de dependências, renderização e build do paper
-notebooks/            notebook da entrega e os cadernos originais do curso
+R/                    modelos, integração, métricas, cenários, dados e figuras
+scripts/              instalação, download dos dados, renderização e build da proposta
+notebooks/            os dois notebooks do estudo e os cadernos originais do curso
+data/processed/       série semanal de casos de chikungunya do Recife
 figures/              figuras geradas
 results/              tabelas geradas em CSV
-paper/                mini paper em LaTeX e o PDF
+proposta/             proposta de projeto no template BSI, em LaTeX
+paper/                mini paper da entrega do Módulo I, mantido como registro
 ```
 
 | Arquivo | Papel |
 | --- | --- |
-| `R/config.R` | População, parâmetros da doença e identidade visual |
-| `R/sir_model.R` | Equações do modelo, com a força de infecção injetada como estratégia |
+| `R/config.R` | População, parâmetros da doença e do vetor, sorologia e identidade visual |
+| `R/sir_model.R` | SIR com a força de infecção injetada, controle vetorial e perda de imunidade opcionais |
+| `R/seir_sei_model.R` | Modelo SEIR-SEI, números de reprodução e taxa de crescimento |
 | `R/solver.R` | Fachada sobre `deSolve::ode` |
-| `R/metrics.R` | Pico, R0, tamanho final e as expressões analíticas de referência |
-| `R/scenarios.R` | Catálogo dos oito cenários |
-| `R/plotting.R` | Tema, escalas, assinatura e gravação das figuras |
-| `R/figures.R` | Construção das seis figuras |
+| `R/metrics.R` | Pico, tamanho final, R0 implícito, eficácia crítica e a tabela de validação |
+| `R/scenarios.R` | Os dez cenários e as análises de controle, imunidade e crescimento |
+| `R/dados.R` | Leitura e agregação das notificações do portal |
+| `R/plotting.R` | Tema, escalas, cores, assinatura e gravação das figuras |
+| `R/figures.R` | Construção das dezessete figuras |
 
-## Organização do código
+| Notebook | Conteúdo |
+| --- | --- |
+| `01_sir_chikungunya_recife.ipynb` | O SIR revisado, respondendo aos seis itens do enunciado e às anotações da professora |
+| `02_dados_e_modelo_vetorial.ipynb` | Dados do Recife, taxa de crescimento observada e o modelo SEIR-SEI |
 
-O modelo é único e a diferença entre o caderno 3 do curso, com força de infecção constante, e o caderno 4,
-com força de infecção dinâmica, é resolvida injetando a função de `lambda` em `make_sir_model`. Os oito
-cenários são dados em `scenario_catalog`, não código repetido. A assinatura das figuras é aplicada por
-`sign_plot`, que envolve um gráfico pronto sem que as funções de plotagem precisem saber disso, e
-`epi_plot` fixa eixos, legenda e tema para que cada figura forneça apenas os dados e os textos.
+## Entrega do Módulo I
+
+A versão entregue no Módulo I, com o mini paper e o notebook originais, está preservada na tag
+`modulo-1`. O `paper/mini_paper.pdf` continua no repositório como registro. O `.tex` aponta para nomes
+de figuras que mudaram, então para recompilá-lo é preciso voltar à tag.
 
 ## Material de referência
 
