@@ -18,3 +18,18 @@ paper/*.synctex.gz
 
 Thumbs.db
 .DS_Store
+
+data/raw/
+Template_BSI___proposta_de_projeto (1)/
+comentários professora/
+
+proposta/*.aux
+proposta/**/*.aux
+proposta/*.log
+proposta/*.out
+proposta/*.toc
+proposta/*.bbl
+proposta/*.blg
+proposta/*.synctex.gz
+proposta/*.fls
+proposta/*.fdb_latexmk

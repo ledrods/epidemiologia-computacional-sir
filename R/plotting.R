@@ -38,8 +38,36 @@ scale_colour_sir <- function() {
   )
 }
 
+scale_colour_seir <- function() {
+  cores <- c(VISUAL$cores[["S"]], VISUAL$cor_expostos, VISUAL$cores[["I"]], VISUAL$cores[["R"]])
+  scale_colour_manual(name = "Compartimento", values = setNames(cores, unname(ROTULOS_SEIR)))
+}
+
+# Regimes do item 5: três classes nominais, nas três primeiras posições da paleta.
+CORES_REGIME <- c(`β > γ` = "#eb6834", `β = γ` = "#1baf7a", `β < γ` = "#2a78d6")
+scale_colour_regime <- function() scale_colour_manual(name = "Regime", values = CORES_REGIME)
+
+# Comparações entre modelos: SIR em azul, SEIR-SEI em laranja, referência em cinza.
+CORES_MODELO <- c(SIR = "#2a78d6", `SEIR-SEI` = "#eb6834")
+
 escala_pessoas <- function(...) scale_y_continuous(labels = milhares, ...)
 escala_dias <- function(...) scale_x_continuous(expand = expansion(mult = c(0.01, 0.06)), ...)
+escala_log_pessoas <- function(...) {
+  scale_y_log10(labels = label_number(big.mark = ".", decimal.mark = ",", drop0trailing = TRUE),
+                ...)
+}
+escala_percentual <- function(...) {
+  scale_y_continuous(labels = label_percent(accuracy = 1, decimal.mark = ","), ...)
+}
+
+# Rampa sequencial de um só tom para os mapas de calor.
+scale_fill_sequencial <- function(nome, rotulos = waiver(), ...) {
+  scale_fill_gradientn(name = nome, colours = VISUAL$sequencial, labels = rotulos, ...)
+}
+
+# Formata número com vírgula decimal, para títulos e rótulos.
+num_br <- function(x, casas = 1) format(round(x, casas), nsmall = casas, decimal.mark = ",",
+                                       big.mark = ".")
 
 # Decorator: recebe um ggplot pronto e devolve o mesmo gráfico assinado.
 sign_plot <- function(p, nota = NULL) {

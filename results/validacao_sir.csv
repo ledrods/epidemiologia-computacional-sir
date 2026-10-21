@@ -1,0 +1,4 @@
+"grandeza","expressao","simulado","analitico","erro_relativo"
+"Prevalência no pico (pessoas)","N (1 - (1 + ln R0) / R0)",515089.729528352,515089.495396823,4.54545336600651e-07
+"Suscetíveis no pico (pessoas)","N / R0",438146.89959044,437917.647058824,0.000523506036251409
+"Taxa de ataque final (fração)","raiz de 1 - a = exp(-R0 a)",0.962027658041008,0.96202751894704,1.44584188017122e-07

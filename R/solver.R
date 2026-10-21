@@ -4,6 +4,16 @@
 suppressPackageStartupMessages(suppressWarnings(library(deSolve)))
 suppressPackageStartupMessages(suppressWarnings(library(reshape2)))
 
+run_model <- function(modelo, initial_state_values, parameters, times, ...) {
+  as.data.frame(ode(
+    y = initial_state_values,
+    times = times,
+    func = modelo,
+    parms = parameters,
+    ...
+  ))
+}
+
 run_sir_model <- function(beta,
                           gamma,
                           S0 = BASELINE$S0,
@@ -11,18 +21,22 @@ run_sir_model <- function(beta,
                           R0 = BASELINE$R0_compartimento,
                           duracao = BASELINE$duracao_dias,
                           passo = BASELINE$passo_dias,
-                          modelo = sir_model) {
+                          omega = 0,
+                          modelo = sir_model,
+                          limiar_extincao = NULL) {
 
   initial_state_values <- c(S = S0, I = I0, R = R0)
-  parameters <- c(beta = beta, gamma = gamma)
+  parameters <- c(beta = beta, gamma = gamma, omega = omega)
   times <- seq(from = 0, to = duracao, by = passo)
 
-  saida <- as.data.frame(ode(
-    y = initial_state_values,
-    times = times,
-    func = modelo,
-    parms = parameters
-  ))
+  # Com limiar_extincao, a integração para quando I cai abaixo dele: o surto
+  # acabou e seguir integrando valores da ordem de 1e-200 só gera erro numérico.
+  saida <- if (is.null(limiar_extincao)) {
+    run_model(modelo, initial_state_values, parameters, times)
+  } else {
+    run_model(modelo, initial_state_values, parameters, times,
+              rootfunc = function(t, y, p) y[["I"]] - limiar_extincao)
+  }
 
   list(
     wide = saida,
@@ -33,11 +47,11 @@ run_sir_model <- function(beta,
 }
 
 # Formato longo com o compartimento já como fator rotulado, para as figuras.
-to_long <- function(saida) {
-  longo <- melt(saida, id.vars = "time",
+to_long <- function(saida, rotulos = VISUAL$rotulos) {
+  longo <- melt(saida[, c("time", names(rotulos))], id.vars = "time",
                 variable.name = "compartimento", value.name = "pessoas")
   longo$compartimento <- factor(longo$compartimento,
-                                levels = names(VISUAL$rotulos),
-                                labels = VISUAL$rotulos)
+                                levels = names(rotulos),
+                                labels = rotulos)
   longo
 }

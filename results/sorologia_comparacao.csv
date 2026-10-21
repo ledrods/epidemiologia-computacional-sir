@@ -1,0 +1,6 @@
+"estrato","prevalencia","ic_inf","ic_sup","fonte","R0_implicito"
+"SIR com R0 = 3,4",0.962027658041008,NA,NA,"Modelo",3.40000331602439
+"Recife",0.357,0.326,0.389,"Braga et al. (2023)",1.23700435502666
+"Estrato alto",0.223,0.158,0.288,"Braga et al. (2023)",1.13145707898874
+"Estrato intermediário",0.398,0.345,0.45,"Braga et al. (2023)",1.27512018510883
+"Estrato baixo",0.386,0.336,0.436,"Braga et al. (2023)",1.26362785190413

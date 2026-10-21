@@ -1,0 +1,3 @@
+"modelo","R0_humano","R0_proxima_geracao","crescimento_inicial","dia_pico","I_pico","prevalencia_pico","taxa_ataque"
+"SIR",3.4,NA,0.4,38,515089.883171232,0.34594866290414,0.962027658041008
+"SEIR-SEI",3.4,1.84390889145858,0.0533231647320989,271,115189.414384411,0.0773644080168249,0.949108868751589

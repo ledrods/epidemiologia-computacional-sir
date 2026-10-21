@@ -1,6 +1,6 @@
 # Instala as dependências do projeto. Idempotente.
 
-pacotes <- c("deSolve", "reshape2", "ggplot2", "scales", "patchwork")
+pacotes <- c("deSolve", "reshape2", "ggplot2", "scales", "patchwork", "jsonlite")
 faltando <- pacotes[!vapply(pacotes, requireNamespace, logical(1), quietly = TRUE)]
 
 if (length(faltando)) {
