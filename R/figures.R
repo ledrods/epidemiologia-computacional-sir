@@ -578,6 +578,78 @@ figura_crescimento <- function(serie, cresc, r0s) {
   sign_plot(p)
 }
 
+figura_duas_ondas <- function(serie, ondas) {
+  ondas$rotulo <- sprintf("%s: crescimento de %s por dia, duplicação em %s dias",
+                          ondas$onda, num_br(ondas$r, 4), num_br(ondas$duplicacao_dias, 0))
+  ondas$de <- ondas$inicio - 56
+  ondas$ate <- ondas$fim + 252
+
+  pontos <- do.call(rbind, lapply(seq_len(nrow(ondas)), function(i) {
+    z <- serie[serie$semana >= ondas$de[i] & serie$semana <= ondas$ate[i] & serie$provaveis > 0, ]
+    data.frame(rotulo = ondas$rotulo[i], semana = z$semana, provaveis = z$provaveis)
+  }))
+  ajustes <- do.call(rbind, lapply(seq_len(nrow(ondas)), function(i) {
+    semana <- seq(ondas$inicio[i], ondas$fim[i], by = 7)
+    data.frame(rotulo = ondas$rotulo[i], semana = semana,
+               provaveis = exp(ondas$intercepto[i] + ondas$r[i] * as.numeric(semana)))
+  }))
+  chuva <- do.call(rbind, lapply(seq_len(nrow(ondas)), function(i) {
+    anos <- seq(as.integer(format(ondas$de[i], "%Y")), as.integer(format(ondas$ate[i], "%Y")))
+    inicio <- as.Date(sprintf("%d-%02d-01", anos, QUADRA_CHUVOSA[["inicio"]]))
+    fim <- as.Date(sprintf("%d-%02d-01", anos, QUADRA_CHUVOSA[["fim"]] + 1)) - 1
+    data.frame(rotulo = ondas$rotulo[i], xmin = pmax(inicio, ondas$de[i]), xmax = pmin(fim, ondas$ate[i]))
+  }))
+  chuva <- chuva[chuva$xmax - chuva$xmin > 30, ]
+  chuva$meio <- chuva$xmin + (chuva$xmax - chuva$xmin) / 2
+
+  p <- ggplot(pontos, aes(x = semana, y = provaveis)) +
+    # A faixa começa em 0,5, abaixo do menor valor plotado, que também é a borda do eixo.
+    geom_rect(data = chuva, aes(xmin = xmin, xmax = xmax, ymin = 0.5, ymax = Inf),
+              inherit.aes = FALSE, fill = VISUAL$sequencial[1], alpha = 0.7) +
+    geom_text(data = chuva, aes(x = meio, y = 1.3, label = "abril a julho"), inherit.aes = FALSE,
+              size = 2.9, colour = VISUAL$cinza_texto) +
+    geom_point(colour = VISUAL$cor_dados, size = 1.6) +
+    geom_line(data = ajustes, colour = VISUAL$cores[["I"]], linewidth = 1) +
+    facet_wrap(~ rotulo, ncol = 1, scales = "free_x") +
+    escala_log_pessoas(breaks = c(1, 3, 10, 30, 100, 300, 1000), expand = expansion(mult = c(0, 0.05))) +
+    scale_x_date(date_breaks = "2 months", date_labels = "%b\n%Y", expand = expansion(mult = 0.01)) +
+    labs(title = "As duas ondas de chikungunya no Recife",
+         subtitle = paste("Casos prováveis semanais em escala log. A reta é o ajuste log linear da fase de crescimento.",
+                          "A faixa azul marca abril a julho, que concentram 59,8% da chuva anual", sep = "\n"),
+         x = NULL, y = "Casos prováveis por semana (escala log)") +
+    theme_epi()
+
+  sign_plot(p, "Chuva: Ferreira (2016)")
+}
+
+figura_distritos <- function(distritos) {
+  razao_cidade <- sum(distritos$segunda_onda) / sum(distritos$primeira_onda)
+  distritos$nome <- factor(distritos$nome, levels = distritos$nome[order(distritos$razao)])
+  distritos$casos <- sprintf("de %s para %s casos", milhares(distritos$primeira_onda),
+                             milhares(distritos$segunda_onda))
+
+  p <- ggplot(distritos, aes(x = razao, y = nome)) +
+    geom_vline(xintercept = razao_cidade, colour = VISUAL$cor_neutra, linetype = "dashed",
+               linewidth = 0.6) +
+    annotate("text", x = razao_cidade, y = nrow(distritos) + 0.75,
+             label = sprintf("razão da cidade, %s", num_br(razao_cidade, 1)),
+             hjust = -0.05, size = 3, colour = VISUAL$cinza_texto) +
+    geom_segment(aes(x = razao_cidade, xend = razao, yend = nome), colour = VISUAL$cor_neutra,
+                 linewidth = 0.6) +
+    geom_point(colour = VISUAL$cor_dados, size = 2.8) +
+    geom_text(aes(x = 1.1 * max(razao), label = casos), hjust = 0, size = 3,
+              colour = VISUAL$cinza_texto) +
+    scale_x_continuous(labels = function(x) num_br(x, 1), limits = c(0, 1.45 * max(distritos$razao)),
+                       expand = expansion(mult = c(0, 0.02))) +
+    scale_y_discrete(expand = expansion(add = c(0.6, 1.2))) +
+    labs(title = "Casos de 2021 sobre os da primeira onda, por distrito sanitário",
+         subtitle = "Um modelo homogêneo prevê a mesma razão em todos os distritos, a da cidade",
+         x = "Casos prováveis de 2021 divididos pelos de 2015 e 2016", y = NULL) +
+    theme_epi()
+
+  sign_plot(p)
+}
+
 figura_limiar <- function(resumo, gamma_ref = CHIKV$gamma) {
   grade <- seq(0.5, 7, by = 0.1)
 

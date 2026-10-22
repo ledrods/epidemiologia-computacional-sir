@@ -1,0 +1,10 @@
+"ponto","SIR","SEIR_SEI","observado"
+"taxa de ataque",0.962027658041008,0.949108868751589,0.357
+"crescimento da primeira onda por dia",0.4,0.0533231647320989,0.020770184973014
+"dias até o pico",38,271,217
+"R efetivo ao fim da primeira onda",0.129105962660574,0.173029846244597,NA
+"crescimento da segunda onda sobre o da primeira",0.49425,0.594753256504627,2.20284511997204
+"razão 2021 sobre a primeira onda, menor distrito",1.60396634615385,1.60396634615385,0.720056697377746
+"razão 2021 sobre a primeira onda, maior distrito",1.60396634615385,1.60396634615385,3.04107142857143
+"infecções por caso provável",NA,NA,53.2129782761037
+"óbitos pelo agravo na primeira onda",NA,NA,57

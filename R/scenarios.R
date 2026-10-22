@@ -178,8 +178,7 @@ controle_vetorial <- function(eficacia = 0.8, inicios = c(120, 200, 250), duraca
 
 # Taxa de crescimento observada na fase inicial da primeira onda, por regressão
 # log linear dos casos prováveis semanais.
-crescimento_observado <- function(serie, inicio = as.Date("2015-08-30"),
-                                  fim = as.Date("2016-01-31")) {
+crescimento_observado <- function(serie, inicio = ONDAS$inicio[1], fim = ONDAS$fim[1]) {
   fase <- serie[serie$semana >= inicio & serie$semana <= fim, ]
   ajuste <- lm(log(provaveis) ~ as.numeric(semana), data = fase)
   ic <- confint(ajuste)[2, ]
@@ -195,4 +194,33 @@ r0_pela_taxa <- function(r) {
   vetorial <- uniroot(function(T) taxa_crescimento_vetorial(parametros_vetor(R0_humano = T)) - r,
                       interval = c(1 + 1e-6, 20), tol = 1e-10)$root
   c(SIR = sir, `SEIR-SEI` = vetorial)
+}
+
+# Crescimento de cada onda e o número de reprodução que ele exige. Em 2021 no
+# máximo 64,3 por cento dos moradores eram suscetíveis (o inquérito é anterior à
+# onda), então o R0 implícito é pelo menos o R efetivo dividido por essa fração.
+comparacao_ondas <- function(serie, suscetiveis = c(1, 1 - SOROLOGIA$prevalencia[1])) {
+  do.call(rbind, lapply(seq_len(nrow(ONDAS)), function(i) {
+    cresc <- crescimento_observado(serie, ONDAS$inicio[i], ONDAS$fim[i])
+    efetivo <- r0_pela_taxa(cresc$r)
+    data.frame(onda = ONDAS$onda[i], cresc, duplicacao_dias = log(2) / cresc$r,
+               suscetiveis_max = suscetiveis[i],
+               R_efetivo_SIR = efetivo[["SIR"]], R_efetivo_SEIR_SEI = efetivo[["SEIR-SEI"]],
+               R0_SIR = efetivo[["SIR"]] / suscetiveis[i],
+               R0_SEIR_SEI = efetivo[["SEIR-SEI"]] / suscetiveis[i])
+  }))
+}
+
+# Casos prováveis por distrito na primeira onda e em 2021. Se a segunda onda
+# repetisse a geografia da primeira, a razão seria a mesma em todos.
+comparacao_distritos <- function(distrito_ano) {
+  d <- distrito_ano[distrito_ano$distrito != "", ]
+  primeira <- tapply(d$casos[d$ano %in% 2015:2016], d$distrito[d$ano %in% 2015:2016], sum)
+  segunda <- tapply(d$casos[d$ano == 2021], d$distrito[d$ano == 2021], sum)[names(primeira)]
+  codigos <- names(primeira)
+  data.frame(distrito = codigos,
+             nome = ifelse(codigos %in% names(DISTRITOS), unname(DISTRITOS[codigos]),
+                           paste("Código", codigos)),
+             primeira_onda = as.integer(primeira), segunda_onda = as.integer(segunda),
+             razao = as.numeric(segunda / primeira))
 }

@@ -19,8 +19,10 @@ confere_verdade <- function(descricao, condicao) {
 }
 
 N <- RECIFE$populacao
-arquivo_serie <- file.path(DIRS$processed, "chik_recife_semanal.csv")
-if (!file.exists(arquivo_serie)) stop("Rode antes scripts/baixar_dados.R para gerar ", arquivo_serie)
+processados <- file.path(DIRS$processed, c("chik_recife_semanal.csv", "chik_recife_distrito_ano.csv",
+                                           "chik_recife_ano.csv", "chik_recife_boletim_2021.csv"))
+faltando <- processados[!file.exists(processados)]
+if (length(faltando)) stop("Rode antes scripts/baixar_dados.R para gerar ", paste(faltando, collapse = ", "))
 
 cat("Simulando a linha de base\n")
 sim <- run_sir_model(beta = CHIKV$beta, gamma = CHIKV$gamma)
@@ -109,6 +111,51 @@ ctrl <- controle_vetorial()
 serie <- le_serie_semanal()
 cresc <- crescimento_observado(serie)
 r0s <- r0_pela_taxa(cresc$r)
+ondas <- comparacao_ondas(serie)
+distritos <- comparacao_distritos(le_distrito_ano())
+anual <- read.csv(file.path(DIRS$processed, "chik_recife_ano.csv"))
+boletim <- read.csv(file.path(DIRS$processed, "chik_recife_boletim_2021.csv"))
+primeira_onda <- serie$semana < as.Date("2017-01-01")
+pico_2016 <- serie$semana[primeira_onda][which.max(serie$provaveis[primeira_onda])]
+
+cat("\nConferência dos dados contra a época e entre si\n")
+confere("notificados de 2021 até 26/10 contra o boletim da época", boletim$notificados,
+        BOLETIM_2021$notificados, 0.05)
+confere("prováveis de 2021 até 26/10 contra o boletim da época", boletim$provaveis,
+        BOLETIM_2021$provaveis, 0.05)
+confere("prováveis de 2015 e 2016, tabela anual contra série semanal",
+        sum(anual$provaveis[anual$ano %in% 2015:2016]), sum(serie$provaveis[primeira_onda]), 1e-12)
+confere_verdade("a segunda onda cresce mais rápido que a primeira, sem sobreposição dos intervalos",
+                ondas$r_inf[2] > ondas$r_sup[1])
+confere_verdade("o distrito com mais casos na primeira onda tem menos casos em 2021",
+                distritos$razao[which.max(distritos$primeira_onda)] < 1)
+
+# O que cada modelo homogêneo prevê para os pontos observáveis da epidemia.
+suscetiveis_2021 <- 1 - SOROLOGIA$prevalencia[1]
+ataque_vet_base <- resumo_vetorial(comp$vetorial)$taxa_ataque
+antes_pico <- serie[serie$semana >= as.Date("2015-01-01") & serie$semana <= pico_2016, ]
+casos_continuos <- max(antes_pico$semana[antes_pico$provaveis == 0]) + 7
+razao_cidade <- sum(distritos$segunda_onda) / sum(distritos$primeira_onda)
+infeccoes_2015_2016 <- SOROLOGIA$prevalencia[1] * N
+modelo_contra_dados <- data.frame(
+  ponto = c("taxa de ataque", "crescimento da primeira onda por dia", "dias até o pico",
+            "R efetivo ao fim da primeira onda", "crescimento da segunda onda sobre o da primeira",
+            "razão 2021 sobre a primeira onda, menor distrito",
+            "razão 2021 sobre a primeira onda, maior distrito",
+            "infecções por caso provável", "óbitos pelo agravo na primeira onda"),
+  SIR = c(resumo_base$taxa_ataque, CHIKV$beta - CHIKV$gamma, resumo_base$dia_pico,
+          CHIKV$R0 * (1 - resumo_base$taxa_ataque),
+          (CHIKV$beta * suscetiveis_2021 - CHIKV$gamma) / (CHIKV$beta - CHIKV$gamma),
+          razao_cidade, razao_cidade, NA, NA),
+  SEIR_SEI = c(ataque_vet_base, r_vet, resumo_vetorial(comp$vetorial)$dia_pico,
+               CHIKV$R0 * (1 - ataque_vet_base),
+               taxa_crescimento_vetorial(parametros_vetor(R0_humano = CHIKV$R0 * suscetiveis_2021)) / r_vet,
+               razao_cidade, razao_cidade, NA, NA),
+  observado = c(SOROLOGIA$prevalencia[1], cresc$r, as.numeric(pico_2016 - casos_continuos),
+                NA, ondas$r[2] / ondas$r[1], min(distritos$razao), max(distritos$razao),
+                infeccoes_2015_2016 / sum(serie$provaveis[primeira_onda]),
+                sum(anual$obitos[anual$ano %in% 2015:2016]))
+)
 
 sorologia <- rbind(
   data.frame(estrato = sprintf("SIR com R0 = %s", num_br(CHIKV$R0, 1)),
@@ -136,7 +183,9 @@ figuras <- list(
   list("fig14_sorologia.png", figura_sorologia(sorologia), 10, 4.8),
   list("fig15_diagrama_seir_sei.png", figura_diagrama_seir_sei(p_vet), 11, 5.6),
   list("fig16_sir_vs_seir_sei.png", figura_sir_vs_vetorial(comp), 10, 5.4),
-  list("fig17_controle_vetorial.png", figura_controle_vetorial(ctrl), 12, 5.4)
+  list("fig17_controle_vetorial.png", figura_controle_vetorial(ctrl), 12, 5.4),
+  list("fig18_duas_ondas.png", figura_duas_ondas(serie, ondas), 10, 8),
+  list("fig19_distritos.png", figura_distritos(distritos), 9, 5.2)
 )
 
 for (f in figuras) {
@@ -186,10 +235,9 @@ crescimento <- data.frame(
   duplicacao_dias = log(2) / cresc$r,
   R0_SIR = r0s[["SIR"]], ataque_SIR = tamanho_final_teorico(r0s[["SIR"]]),
   R0_SEIR_SEI = r0s[["SEIR-SEI"]], ataque_SEIR_SEI = tamanho_final_teorico(r0s[["SEIR-SEI"]]),
-  provaveis_2015_2016 = sum(serie$provaveis[serie$semana < as.Date("2017-01-01")]),
+  provaveis_2015_2016 = sum(serie$provaveis[primeira_onda]),
   notificados_2015_fev2019 = sum(serie$notificados[serie$semana < as.Date("2019-03-01")]),
-  semana_pico_2016 = serie$semana[serie$semana < as.Date("2017-01-01")][
-    which.max(serie$provaveis[serie$semana < as.Date("2017-01-01")])]
+  semana_pico_2016 = pico_2016
 )
 
 tabelas <- list(
@@ -206,7 +254,10 @@ tabelas <- list(
   crescimento_observado.csv = crescimento,
   seir_sei_parametros.csv = parametros_tabela,
   modelos_resumo.csv = modelos,
-  controle_vetorial.csv = ctrl$resumo
+  controle_vetorial.csv = ctrl$resumo,
+  ondas.csv = ondas,
+  distritos_ondas.csv = distritos,
+  modelo_contra_dados.csv = modelo_contra_dados
 )
 
 for (nome in names(tabelas)) {

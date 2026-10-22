@@ -34,6 +34,47 @@ infectado infectar o mosquito que o pica. A Figura \ref{fig:diagrama} mostra a e
 \label{fig:diagrama}
 \end{figure}
 
+\paragraph{Os compartimentos escolhidos.} A atividade sugere considerar períodos de latência, vetores,
+nascimentos, mortes, hospitalizações e estratificação por faixa etária ou por grupos. A Tabela
+\ref{tab:componentes} mostra como cada um entra no projeto. O critério foi incluir o que altera a
+transmissão e o que os dados do Recife permitem medir. Os números da tabela vêm dos arquivos do portal e
+são discutidos na Seção \ref{sec:preliminares}.
+
+\begin{table}[htbp]
+\centering
+\caption{Componentes sugeridos na atividade e como entram no projeto.}
+\label{tab:componentes}
+\footnotesize
+\begin{tabular}{L{3.5cm}L{3.1cm}L{7.9cm}}
+\toprule
+\textbf{Componente} & \textbf{No projeto} & \textbf{Justificativa} \\
+\midrule
+Latência no humano & $E_h$, 3 dias & A pessoa infectada só transmite depois da incubação. Isso alonga o
+intervalo entre uma infecção e a seguinte e muda o $R_0$ que se lê da série de casos. \\
+Latência no mosquito & $E_v$, 8 dias & O mosquito só transmite depois da incubação do vírus, e muitos
+morrem antes. É o fator $\sigma_v/(\sigma_v + \mu_v)$ de $R_{hv}$. \\
+Vetor & $S_v$, $E_v$ e $I_v$ & A transmissão só acontece pela picada, e é sobre o mosquito que o controle
+age. \\
+Nascimentos e mortes dos mosquitos & $\mu_v$, vida média de 14 dias & O mosquito infectante transmite até
+morrer, e o controle de criadouros age pelos nascimentos. \\
+Nascimentos e mortes dos humanos & não incluídos & Cada onda durou menos de um ano, diante de décadas de
+vida humana. \\
+Mortes pela doença & desfecho calculado, não compartimento & Foram 57 óbitos na primeira onda para cerca de
+531 mil infecções estimadas, o que não altera a transmissão. \\
+Hospitalizações & desfecho calculado, não compartimento & O campo foi preenchido em 21\% dos casos
+prováveis de 2015 e 2016, com 5\% de internados entre eles. \\
+Grupos da cidade & OE4, por distrito ou estrato & O inquérito e a distribuição da onda de 2021 entre os
+distritos mostram que a cidade não se infectou por igual. \\
+Faixas etárias & não incluídas & A transmissão passa pelo mosquito e não depende de contatos entre idades,
+como nas doenças respiratórias. A idade pesa na gravidade: a mediana foi de 36 anos nos casos de 2016 e
+de 68 nos óbitos. \\
+Estação do ano & OE3, densidade de mosquitos $m(t)$ & A onda de 2021, na estação chuvosa, cresceu 2,2
+vezes mais rápido que a primeira. \\
+Perda de imunidade & não incluída & Testada com o SIRS. A evidência sustenta imunidade duradoura. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \paragraph{Parâmetros.} A Tabela \ref{tab:parametros} reúne os valores de partida. Eles vêm da compilação
 de \citeonline{manore2014} para o \textit{Aedes aegypti}, com duas fontes adicionais: a latência humana
 coincide com a mediana de \citeonline{rudolph2014}, e a incubação no mosquito é a média estimada por
@@ -82,7 +123,9 @@ cada arquivo traz todas as notificações, com a classificação final. A série
 prováveis}, a definição do Ministério da Saúde: todas as notificações de residentes no Recife, exceto as
 descartadas, agregadas pela semana de início dos sintomas. Os arquivos de 2015 e 2016 trazem os códigos 1 e
 2 na classificação final, que não constam no dicionário do portal. Eles foram mantidos como prováveis, e o
-significado deles será confirmado com a vigilância municipal no OE2.
+significado deles será confirmado com a vigilância municipal no OE2. Os mesmos arquivos trazem o critério
+de confirmação, a evolução do caso, a hospitalização, a idade e o distrito de residência, que entram nas
+contagens anuais e por distrito usadas na discussão.
 
 \paragraph{População.} Censo Demográfico 2022 do IBGE: 1.488.920 habitantes \cite{ibge2022}. As populações
 por bairro e por distrito sanitário, necessárias ao OE4, também virão do Censo.
@@ -112,7 +155,8 @@ estimados $\bar{m}$ (e portanto $R_{hh}$), $\rho$, $\delta$, $\phi$, a dispersã
 por máxima verossimilhança. O inquérito entra como um segundo termo da verossimilhança: o modelo precisa
 prever, para o período da coleta, a fração com anticorpos observada nos 2.070 examinados. Os intervalos
 de confiança virão da verossimilhança perfilada. Séries de temperatura e chuva do INMET serão testadas
-como alternativa à função cosseno.
+como alternativa à função cosseno. O teste da sazonalidade é se o mesmo modelo reproduz também o
+crescimento mais rápido da onda de 2021, que começou em outra época do ano.
 
 \paragraph{OE4. Representar a heterogeneidade.} A população será dividida em grupos, por distrito sanitário
 ou pelos três estratos do inquérito, cada um com sua densidade de mosquitos. A mistura entre grupos será
@@ -286,8 +330,8 @@ Crescimento observado, lido pelo SIR & 1,12 & 21\% \\
 Com o mesmo $R_{hh} = 3{,}4$, o SEIR-SEI cresce a 0,053 por dia, contra 0,40 do SIR, e o pico passa do dia 38
 para o dia 271, com 115.189 infectados em vez de 515.090 (Figura \ref{fig:comparacao}). A taxa de ataque
 quase não muda, 94,9\% contra 96,2\%, porque o tamanho final depende de $R_{hh}$. A ordem de grandeza do
-tempo até o pico fica próxima da observada no Recife, cerca de seis meses, que o SIR erra por um fator de
-cerca de cinco. A taxa de crescimento simulada, 0,0534 por dia, coincide com o autovalor do sistema
+tempo até o pico fica próxima da observada no Recife, de seis a sete meses, que o SIR erra por um fator de
+mais de cinco. A taxa de crescimento simulada, 0,0534 por dia, coincide com o autovalor do sistema
 linearizado, 0,0533 por dia.
 
 \begin{figure}[htbp]
@@ -311,15 +355,100 @@ necessário, o que mostra por que a definição de $R_0$ precisa ser explícita.
 \label{fig:controle}
 \end{figure}
 
+\subsubsection{O que os registros da época mostram}
+
+Os números do portal são os mesmos que a Prefeitura divulgava. Em novembro de 2021 a imprensa noticiou
+16.026 notificações e 14.926 casos prováveis de chikungunya no Recife até 26 de outubro \cite{cbn2021}.
+Refeita a contagem no mesmo recorte, o portal tem hoje 16.645 notificações e 15.058 casos prováveis, 3,9\% e
+0,9\% a mais, diferença compatível com registros feitos depois do boletim. O script de conferência repete
+essa comparação a cada execução.
+
+A primeira onda cresceu no meio de outra emergência. Em 11 de novembro de 2015, o Ministério da Saúde
+declarou emergência em saúde pública de importância nacional pelo aumento de microcefalias, a partir do
+alerta de Pernambuco \cite{brasil2015}. Numa unidade de pronto atendimento de Paulista, na Região
+Metropolitana do Recife, a chikungunya passou de 2,3\% dos pacientes febris examinados em junho de 2015
+para 35\% em agosto e respondeu, em média, por 84,7\% deles de agosto de 2015 a maio de 2016, enquanto o
+zika desaparecia e quase não se encontrava dengue, apesar das muitas notificações de dengue
+\cite{magalhaes2017}. Os três vírus causam quadros parecidos e a confirmação em laboratório era lenta: em
+abril de 2016, Pernambuco tinha 15.332 notificações de chikungunya no ano e só 340 confirmadas, e os
+exames de cinco óbitos do Recife tinham acabado de sair \cite{agenciabrasil2016}. No portal, 92\% dos casos
+prováveis de 2015 e 2016 foram encerrados pelo critério clínico epidemiológico, sem confirmação em
+laboratório.
+
+A gravidade também foi registrada. \citeonline{brito2017} encontraram 4.235 mortes a mais em Pernambuco em
+2016 do que a média dos quatro anos anteriores, concentradas de janeiro a abril, os meses do pico. Até
+novembro, só 54 óbitos tinham sido atribuídos oficialmente à chikungunya no estado. No portal, os
+residentes do Recife somam 57 óbitos pelo agravo em 2015 e 2016, com mediana de 68 anos de idade em 2016.
+
+A onda de 2021 veio durante a pandemia de covid-19, cujos sintomas se confundem com os das arboviroses.
+De janeiro a maio daquele ano, as notificações de chikungunya em Pernambuco foram 135,8\% maiores que no
+mesmo período de 2020 \cite{diariope2021}. As duas ondas cresceram em épocas diferentes do ano (Figura
+\ref{fig:ondas}). A primeira cresceu de setembro a janeiro, no período mais seco, e a de 2021 de março a
+maio, no início da estação chuvosa. No Recife, setembro a dezembro somam 11,2\% da chuva anual, e abril a
+julho, 59,8\% \cite{ferreira2016}. A segunda cresceu 2,2 vezes
+mais rápido, 0,0458 por dia contra 0,0208, dobrando a cada 15 dias em vez de 33, e os intervalos de
+confiança não se sobrepõem.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{fig18_duas_ondas.png}
+\caption{As duas ondas em escala logarítmica, com a fase de crescimento ajustada e os meses mais chuvosos.}
+\label{fig:ondas}
+\end{figure}
+
+A distribuição pela cidade também mudou (Figura \ref{fig:distritos}). Em 2021 o Recife teve 1,6 caso
+provável para cada caso da primeira onda, mas essa razão variou de 0,72 a 3,04 entre os distritos
+sanitários. Afogados e Tejipió, o distrito com mais casos em 2015 e 2016, teve menos casos em 2021 do que
+na primeira onda, e Casa Amarela e Dois Irmãos repetiu o mesmo número. A comparação ainda não considera a
+população de cada distrito nem a mudança nos códigos de distrito, que o OE2 vai conferir.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{fig19_distritos.png}
+\caption{Razão entre os casos prováveis de 2021 e os da primeira onda em cada distrito sanitário.}
+\label{fig:distritos}
+\end{figure}
+
 \subsubsection{Discussão dos resultados preliminares}
 
-Os dados do Recife medem as distâncias entre os modelos homogêneos e a epidemia real em três frentes.
+A Tabela \ref{tab:comparacao} confronta os dois modelos homogêneos, com o número de reprodução da
+literatura, com nove pontos observáveis da epidemia no Recife.
 
-\textbf{Tamanho.} Com o $R_0$ da literatura, o SIR prevê que 96,2\% da população se infecte, e o inquérito
-encontrou 35,7\% (Figura \ref{fig:sorologia}). Resolvendo a equação do tamanho final para $R_0$, os 35,7\%
-correspondem a $R_0 = -\ln(1 - a)/a = 1{,}24$ sob mistura homogênea. A diferença entre o estrato alto,
-22,3\%, e os demais, perto de 39\%, mostra que a cidade não se infectou por igual. Isso pesa contra a
-mistura homogênea e é o que o OE4 vai testar.
+\begin{table}[htbp]
+\centering
+\caption{O que os modelos homogêneos preveem com $R_{hh} = 3{,}4$ e o que se observou no Recife.}
+\label{tab:comparacao}
+\footnotesize
+\begin{tabular}{L{3.9cm}L{2.1cm}L{2.1cm}L{3.6cm}L{2.0cm}}
+\toprule
+\textbf{Ponto} & \textbf{SIR} & \textbf{SEIR-SEI} & \textbf{Recife} & \textbf{Leitura} \\
+\midrule
+1. Taxa de ataque & 96,2\% & 94,9\% & 35,7\% no inquérito & divergem \\
+2. Crescimento da primeira onda & 0,40 por dia & 0,053 por dia & 0,021 por dia & divergem \\
+3. Dias até o pico & 38 & 271 & pelo menos 217 & SEIR-SEI aproxima \\
+4. Segunda onda & impossível, $R$ efetivo de 0,13 & impossível, $R$ efetivo de 0,17 & 16.014 casos
+prováveis em 2021 & divergem \\
+5. Crescimento da segunda onda sobre o da primeira & 0,49 & 0,59 & 2,2 & divergem \\
+6. Razão entre 2021 e a primeira onda por distrito & 1,6 em todos & 1,6 em todos & de 0,72 a 3,04 &
+divergem \\
+7. Notificação & não representa & não representa & 1 caso provável para 53 infecções & fora dos
+modelos \\
+8. Óbitos & não representa & não representa & 57 na primeira onda & fora dos modelos \\
+9. Reinfecção & não ocorre & não ocorre & a onda de 2021 não a exige & coincidem \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Dos nove pontos, o SIR diverge dos dados em seis e o SEIR-SEI em cinco. O SEIR-SEI aproxima o tempo até o
+pico, que o SIR erra por um fator de mais de cinco. Os dois modelos coincidem com os dados num ponto, a
+imunidade duradoura, e os dois pontos restantes, notificação e óbitos, estão fora de ambos.
+
+\textbf{Tamanho (pontos 1, 4 e 9).} Com o $R_0$ da literatura, o SIR prevê que 96,2\% da população se
+infecte, e o inquérito encontrou 35,7\% (Figura \ref{fig:sorologia}). Resolvendo a equação do tamanho final
+para $R_0$, os 35,7\% correspondem a $R_0 = -\ln(1 - a)/a = 1{,}24$ sob mistura homogênea. Um surto do
+tamanho previsto deixaria o $R$ efetivo em 0,13, e sem nascimentos nem perda de imunidade não haveria
+segunda onda. Mas o inquérito, feito antes de 2021, mostra que cerca de 64\% da população nunca tinha sido
+infectada, o que basta para uma nova onda sem reinfecção.
 
 \begin{figure}[htbp]
 \centering
@@ -328,27 +457,45 @@ mistura homogênea e é o que o OE4 vai testar.
 \label{fig:sorologia}
 \end{figure}
 
-\textbf{Ritmo.} O SIR põe o pico 38 dias depois do primeiro caso, e a primeira onda levou cerca de seis
-meses entre o início do crescimento e o pico. O SEIR-SEI corrige a ordem de grandeza, o que confirma a
-sugestão de incluir o vetor e a latência. Como mostra a Tabela \ref{tab:estimativas}, a mesma série
-observada implica números de reprodução diferentes em cada modelo: a estrutura do modelo não é um detalhe,
-ela muda o que se conclui dos dados.
+\textbf{Ritmo (pontos 2 e 3).} O SIR põe o pico 38 dias depois do primeiro caso. No Recife, das primeiras
+semanas com casos contínuos, em julho de 2015, até o pico, em fevereiro de 2016, passaram-se 217 dias, e a
+introdução do vírus foi anterior a essas notificações. O SEIR-SEI corrige a ordem de grandeza, o que
+confirma a sugestão de incluir o vetor e a latência. Como mostra a Tabela \ref{tab:estimativas}, a mesma
+série observada implica números de reprodução diferentes em cada modelo: a estrutura do modelo não é um
+detalhe, ela muda o que se conclui dos dados.
 
-\textbf{Notificação.} Foram 9.989 casos prováveis em 2015 e 2016, 0,7\% da população. Se 35,7\% se
-infectaram, foram cerca de 531 mil infecções, ou 53 para cada caso provável. \citeonline{braga2023} chegam a
-uma razão parecida, de cerca de 45, com outra contagem de notificações. A fração de notificação, portanto,
-precisa ser estimada junto com a transmissão, como prevê o OE3.
+\textbf{Mudança entre as ondas (ponto 5).} Com os parâmetros fixos, um modelo com menos suscetíveis prevê
+uma segunda onda mais lenta que a primeira, com 0,49 do crescimento no SIR e 0,59 no SEIR-SEI. A onda de
+2021 cresceu 2,2 vezes mais rápido. Lida pelo SEIR-SEI, ela exige $R$ efetivo de 2,93 e, com no máximo
+64,3\% de suscetíveis, $R_{hh}$ de pelo menos 4,56, contra 1,71 na primeira onda. O vírus e a cidade são os
+mesmos, então as condições de transmissão mudaram entre as ondas. Os registros apontam duas candidatas: a
+estação, seca no crescimento da primeira onda e chuvosa no da segunda, e a notificação, que em 2015
+disputava atenção com o zika e em 2021 com a covid-19. O valor exigido também seria menor se a onda de
+2021 tivesse se concentrado nas áreas menos atingidas em 2016, o que liga este ponto ao seguinte.
 
-\textbf{Reinfecção ou heterogeneidade.} A onda de 2021 poderia sugerir perda de imunidade. Mas o inquérito,
-feito antes dela, mostra que cerca de 64\% da população nunca tinha sido infectada, o que basta para uma nova
-onda sem reinfecção. A hipótese mais simples é que a primeira onda parou antes de atingir toda a cidade,
-por causa da estação e da distribuição desigual da transmissão entre os grupos.
+\textbf{Heterogeneidade (ponto 6).} A diferença entre o estrato alto do inquérito, 22,3\%, e os demais,
+perto de 39\%, mostra que a cidade não se infectou por igual. A onda de 2021 confirma isso por outro
+caminho: um modelo homogêneo prevê a mesma razão entre as ondas em todos os distritos, e ela variou de 0,72
+a 3,04, com o distrito mais atingido em 2016 tendo menos casos em 2021. É o que o OE4 vai testar.
 
-Nenhum modelo homogêneo reproduz ao mesmo tempo a velocidade e o tamanho da primeira onda: o SEIR-SEI,
-ajustado pelo crescimento, ainda prevê 69\% de infectados. A diferença que sobra é o objeto da proposta. Há
-também limitações nos dados que o projeto precisa enfrentar: o significado dos códigos antigos de
-classificação, e o fato de que parte do crescimento inicial das notificações pode refletir a atenção
-crescente dos serviços a uma doença nova, e não só a transmissão.
+\textbf{Notificação e gravidade (pontos 7 e 8).} Foram 9.989 casos prováveis em 2015 e 2016, 0,7\% da
+população. Se 35,7\% se infectaram, foram cerca de 531 mil infecções, ou 53 para cada caso provável.
+\citeonline{braga2023} chegam a uma razão parecida, de cerca de 45, com outra contagem de notificações.
+Como 92\% dos casos foram classificados sem confirmação em laboratório, em meio a outras doenças com sintomas parecidos, a
+fração de notificação precisa ser estimada junto com a transmissão e pode ter mudado entre as ondas, como
+prevê o OE3. Os 57 óbitos são poucos diante das infecções e não mudam a transmissão, mas são o desfecho
+mais grave, e o excesso de mortes medido por \citeonline{brito2017} indica que a contagem oficial está
+abaixo do real. Por isso entram como desfecho calculado a partir das infecções, e não como compartimento
+(Tabela \ref{tab:componentes}).
+
+Cada divergência aponta para um componente da proposta: a estação, para o ritmo e para a mudança entre as
+ondas (OE3); os grupos, para o tamanho e para a distribuição entre os distritos (OE4); e a fração de
+notificação, para ligar infecções a casos (OE3). Nenhum modelo homogêneo reproduz ao mesmo tempo a
+velocidade e o tamanho da primeira onda: o SEIR-SEI, ajustado pelo crescimento, ainda prevê 69\% de
+infectados. A diferença que sobra é o objeto da proposta. Há também limitações nos dados que o projeto
+precisa enfrentar: o significado dos códigos antigos de classificação e de distrito, e o fato de que
+parte do crescimento das notificações pode refletir a atenção crescente dos serviços a uma doença nova, e
+não só a transmissão.
 
 \subsection{Aspectos éticos}
 

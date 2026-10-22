@@ -51,6 +51,27 @@ SOROLOGIA <- data.frame(
   ic_sup = c(0.389, 0.288, 0.450, 0.436)
 )
 
+# Fase de crescimento de cada onda, da semana em que os casos deixam o patamar
+# anterior até duas semanas antes do pico.
+ONDAS <- data.frame(
+  onda = c("2015 e 2016", "2021"),
+  inicio = as.Date(c("2015-08-30", "2021-02-28")),
+  fim = as.Date(c("2016-01-31", "2021-05-16"))
+)
+
+# Abril a julho concentram 59,8 por cento da chuva anual do Recife (Ferreira, 2016).
+QUADRA_CHUVOSA <- c(inicio = 4, fim = 7)
+
+# Nomes da tabela de distritos do portal, que só cobre os seis códigos antigos.
+DISTRITOS <- c(`117` = "Centro Expandido", `118` = "Encruzilhada e Beberibe",
+               `119` = "Casa Amarela e Dois Irmãos", `120` = "Caxangá e Várzea",
+               `121` = "Afogados e Tejipió", `122` = "Ibura e Boa Viagem")
+
+# Números da Prefeitura divulgados pela CBN Recife em 17/11/2021, para as
+# notificações de 2021 feitas até 26/10.
+BOLETIM_2021 <- list(ano = 2021, corte = as.Date("2021-10-26"),
+                     notificados = 16026, provaveis = 14926)
+
 VISUAL <- list(
   assinatura = "Leandro Cesar",
   disciplina = "Elementos de Epidemiologia Computacional",

@@ -2,14 +2,17 @@
 A chikungunya é uma arbovirose transmitida pelo \textit{Aedes aegypti} que deixa dor articular crônica em
 grande parte dos infectados. O Recife teve duas epidemias, em 2015 e 2016 e em 2021, e um inquérito
 sorológico de 2018 e 2019 mostrou que cerca de 64\% da população ainda não havia sido infectada. Esta
-proposta tem como objetivo desenvolver e calibrar um modelo compartimental SEIR-SEI, com período de
-latência nos humanos e o mosquito como população explícita, para o monitoramento da chikungunya no
-Recife. O ponto de partida é um modelo SIR, revisado e conferido contra suas expressões analíticas, cujas
+proposta tem como objetivo desenvolver e calibrar um modelo compartimental SEIR-SEI, com períodos de
+latência no humano e no mosquito e o vetor como população explícita, para o monitoramento da chikungunya
+no Recife. O ponto de partida é um modelo SIR, revisado e conferido contra suas expressões analíticas, cujas
 limitações foram medidas com dados reais: com o número de reprodução da literatura, o SIR prevê 96\% de
 infectados e o pico 38 dias após o primeiro caso, enquanto o inquérito mediu 36\% e a primeira onda levou
 cerca de seis meses até o pico. O SEIR-SEI, já implementado, leva o pico para cerca de nove meses com o
 mesmo número de reprodução, e a taxa de crescimento observada nas notificações implica números de
 reprodução diferentes em cada modelo, o que mostra que a estrutura do modelo importa para ler os dados.
+Comparados com nove pontos observados, o SIR diverge em seis e o SEIR-SEI em cinco. A onda de 2021 cresceu
+2,2 vezes mais rápido que a primeira, na estação chuvosa, e se distribuiu de outro modo entre os
+distritos, o que aponta a sazonalidade e a heterogeneidade como os componentes que faltam.
 O projeto vai calibrar o SEIR-SEI com as notificações de 2015 a 2025 do portal de dados abertos da
 Prefeitura, usando o inquérito sorológico como restrição, incluir sazonalidade e heterogeneidade entre
 grupos da cidade e avaliar cenários de controle vetorial. Os produtos esperados são o modelo calibrado,

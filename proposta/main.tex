@@ -44,6 +44,9 @@
 \usepackage{xurl}
 \usepackage{appendix}
 \usepackage{booktabs}
+\usepackage{array}
+% Coluna de largura fixa alinhada à esquerda, para tabelas com texto.
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 
 % O logotipo fica em figures/ e as figuras do estudo são geradas em ../figures/.
 \graphicspath{{figures/}{../figures/}}

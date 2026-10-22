@@ -33,10 +33,15 @@ semanal <- agrega_semanal(casos)
 anual <- agrega_distrito_ano(casos)
 
 dir.create(DIRS$processed, showWarnings = FALSE, recursive = TRUE)
-write.csv(semanal, file.path(DIRS$processed, "chik_recife_semanal.csv"),
-          row.names = FALSE, fileEncoding = "UTF-8")
-write.csv(anual, file.path(DIRS$processed, "chik_recife_distrito_ano.csv"),
-          row.names = FALSE, fileEncoding = "UTF-8")
+saidas <- list(
+  chik_recife_semanal.csv = semanal,
+  chik_recife_distrito_ano.csv = anual,
+  chik_recife_ano.csv = agrega_ano(casos),
+  chik_recife_boletim_2021.csv = conferencia_boletim(casos)
+)
+for (nome in names(saidas)) {
+  write.csv(saidas[[nome]], file.path(DIRS$processed, nome), row.names = FALSE, fileEncoding = "UTF-8")
+}
 
 cat("\nCasos prováveis (notificados menos descartados) por ano de início de sintomas\n")
 print(aggregate(casos ~ ano, data = anual, FUN = sum), row.names = FALSE)
