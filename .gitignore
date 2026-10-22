@@ -33,3 +33,6 @@ proposta/*.blg
 proposta/*.synctex.gz
 proposta/*.fls
 proposta/*.fdb_latexmk
+
+overleaf/
+overleaf.zip

@@ -42,7 +42,12 @@ Rscript scripts/setup.R            # instala deSolve, reshape2, ggplot2, scales,
 Rscript scripts/baixar_dados.R     # baixa as notificações do portal do Recife e gera data/processed/
 Rscript scripts/render_figures.R   # gera figures/ e results/, conferindo tudo contra a teoria
 bash scripts/build_proposta.sh     # compila proposta/main.pdf
+bash scripts/montar_overleaf.sh    # copia para overleaf/ e overleaf.zip só o que o Overleaf precisa
 ```
+
+O `overleaf.zip` sobe direto no Overleaf, em New Project e depois Upload Project. A pasta `overleaf/` tem o
+mesmo conteúdo, para quem preferir arrastar os arquivos. As duas ficam fora do controle de versão e são
+refeitas pelo script a cada mudança na proposta.
 
 O build da proposta usa `pdflatex` e `bibtex` do PATH. Se eles não estiverem no PATH, a variável `MIKTEX`
 pode apontar para a pasta `bin` da instalação, por exemplo `MIKTEX=/caminho/miktex/bin/x64 bash
